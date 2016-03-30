@@ -1,0 +1,8 @@
+---
+- include: Debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: conf.yml
+
+- name: Start Marathon service
+  service: name=marathon state=restarted enabled=yes 

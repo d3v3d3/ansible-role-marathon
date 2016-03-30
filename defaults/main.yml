@@ -1,0 +1,18 @@
+---
+marathon_version: "0.15.2"
+
+# Debian: Mesosphere apt repository URL
+marathon_apt_package: "marathon={{ marathon_version }}-1.*"
+marathon_apt_repo: "deb http://repos.mesosphere.com/{{ansible_distribution|lower}} {{ansible_distribution_release|lower}} main"
+
+marathon_hostname: "{{ ansible_hostname }}"
+marathon_port: 8080
+marathon_env_java_opts: '-Xmx512m'
+marathon_env_vars:
+  - "JAVA_OPTS={{ marathon_env_java_opts }}"
+
+# command line flags:
+# https://mesosphere.github.io/marathon/docs/command-line-flags.html
+# Marathon reads files under /etc/marathon/conf and adds them to CLI
+
+marathon_zookeeper_state: "zk://{{ zookeeper_hosts | join(':' + zookeeper_client_port + ',') }}:{{ zookeeper_client_port }}/marathon"

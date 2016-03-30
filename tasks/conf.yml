@@ -1,0 +1,29 @@
+---
+
+- name: Create Marathon conf directory
+  file: path=/etc/marathon/conf state=directory
+
+- name: Set required --master option
+  template: src=master.j2 dest=/etc/marathon/conf/master
+
+- name: Remove optional --zk option
+  file: path=/etc/marathon/conf/zk state=absent
+  when: marathon_zookeeper_state == ""
+
+- name: Set optional --zk option
+  template: src=zk.j2 dest=/etc/marathon/conf/zk
+  when: marathon_zookeeper_state != ""
+
+- name: Set --hostname option
+  template: src=hostname.j2 dest=/etc/marathon/conf/hostname
+
+- name: Set --http-port option
+  template: src=http_port.j2 dest=/etc/marathon/conf/http_port
+
+- name: Upstart check
+  stat: path=/etc/init/
+  register: etc_init_check
+
+- name: systemd check
+  stat: path=/usr/lib/systemd/system/
+  register: systemd_check
